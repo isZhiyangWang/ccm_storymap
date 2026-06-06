@@ -117,9 +117,7 @@ function App() {
         <main>
           <GuidedMap
             data={pageData.guidedMap}
-            isActive={introComplete}
             stories={pageData.stories}
-            onOverviewSelect={() => scrollToId("guided-map")}
             onStorySelect={handleStorySelect}
           />
 

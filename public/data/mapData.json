@@ -1,8 +1,8 @@
 {
-  "_editingNote": "After the supervisor meeting, update each story's sectionName, toolbarLabel, sectionDescription, markerPosition, markerOffset, and storyMapUrl here. Tile URLs, tileBounds, and tms values describe the verified MapWarper layers.",
+  "_editingNote": "Update story labels, descriptions, contents-map placement, and StoryMap URLs in this file.",
   "site": {
     "title": "Colonial Networks: A Critical Counter Map",
-    "footerText": "Critical Counter Map · This is a footer"
+    "footerText": "Colonial Networks: A Critical Counter Map"
   },
   "hero": {
     "titleMain": "Colonial Networks",
@@ -14,55 +14,11 @@
   },
   "guidedMap": {
     "sectionLabel": "Guided Critical Counter Map",
-    "mapAriaLabel": "Guided historical overview map of Saint-Domingue",
-    "toolbarLabel": "Story navigation controls",
-    "overviewButtonLabel": "Overview",
-    "loadingMessage": "Loading guided map…",
-    "tileErrorMessage": "Some remote map tiles could not be loaded. Check your connection and try again.",
-    "introText": "Introduction text to confirm after the next supervisor review.",
-    "draggingBreakpoint": 760,
-    "map": {
-      "center": [
-        18.893333,
-        -72.833336
-      ],
-      "zoom": 7,
-      "minZoom": 6,
-      "maxZoom": 14,
-      "maxBounds": [
-        [
-          16.95,
-          -75.35
-        ],
-        [
-          20.95,
-          -70.3
-        ]
-      ],
-      "basemap": {
-        "url": "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-        "maxZoom": 19,
-        "attribution": "&copy; OpenStreetMap contributors &copy; CARTO"
-      }
-    },
+    "introText": "Select a numbered map inset to open the corresponding StoryMap module.",
     "overview": {
       "title": "Carte de la partie françoise de St. Domingue",
       "image": "assets/1_SaintDomingue.jpg",
-      "opacity": 0.7,
-      "bounds": [
-        [
-          17.443333,
-          -74.70248401130189
-        ],
-        [
-          20.343332999999998,
-          -70.96418798869811
-        ]
-      ],
-      "fitPadding": [
-        28,
-        28
-      ]
+      "alt": "Carte de la partie françoise de St. Domingue with clickable locations for the four StoryMap modules."
     }
   },
   "storySectionsLabel": "StoryMap modules",
@@ -77,132 +33,100 @@
       "number": 1,
       "toolbarLabel": "Region around Cap-Français",
       "sectionName": "Region around Cap-Français",
-      "sectionDescription": "Story description to confirm after the next supervisor review.",
-      "markerPosition": [
-        19.7067906,
-        -72.2575607
-      ],
-      "markerOffset": [
-        -46,
-        -30
-      ],
-      "storyMapUrl": "",
-      "tileLayer": {
-        "title": "Region around Cap-Français",
-        "url": "https://mapwarper.net/maps/tile/70586/{z}/{x}/{y}.png",
-        "opacity": 0.82,
-        "tms": false,
-        "tileBounds": [
-          [
-            19.5813765,
-            -72.4411772
-          ],
-          [
-            19.8322046,
-            -72.0739442
-          ]
+      "sectionDescription": "Regional module for the area around Cap-Français.",
+      "contentsMap": {
+        "image": "assets/2_CapRegion.jpg",
+        "color": "#0099d6",
+        "box": [
+          66.5,
+          12.4,
+          16.7
         ],
-        "attribution": "Historical map tiles: MapWarper"
-      }
+        "aspectRatio": 1.23046875,
+        "badgePosition": "corner",
+        "labelPosition": "below"
+      },
+      "storyMapUrl": "https://storymaps.arcgis.com/stories/efd8613af3d845b18243423c9ab3216c?cover=false"
     },
     {
       "id": "town-cap-francais",
       "number": 2,
       "toolbarLabel": "Town of Cap-Français",
       "sectionName": "Town of Cap-Français",
-      "sectionDescription": "Story description to confirm after the next supervisor review.",
-      "markerPosition": [
-        19.7625835,
-        -72.2019438
-      ],
-      "markerOffset": [
-        38,
-        -25
-      ],
-      "storyMapUrl": "",
-      "tileLayer": {
-        "title": "Town of Cap-Français",
-        "url": "https://mapwarper.net/maps/tile/84279/{z}/{x}/{y}.png",
-        "opacity": 0.84,
-        "tms": false,
-        "tileBounds": [
-          [
-            19.7457221,
-            -72.218101
-          ],
-          [
-            19.7794449,
-            -72.1857865
-          ]
+      "sectionDescription": "Town-scale module for Cap-Français, linked from its position inside the regional map.",
+      "contentsMap": {
+        "image": "assets/3_CapVille_small.jpg",
+        "color": "#f1b21a",
+        "box": [
+          87.7,
+          2.3,
+          10.8
         ],
-        "attribution": "Historical map tiles: MapWarper"
-      }
+        "aspectRatio": 0.8335714286,
+        "badgePosition": "corner",
+        "labelPosition": "left",
+        "callout": {
+          "target": [
+            77.2,
+            16.7
+          ],
+          "anchor": [
+            87.7,
+            11.4
+          ]
+        }
+      },
+      "storyMapUrl": "https://storymaps.arcgis.com/stories/19438554515849ea8e4bd94734238b3d?cover=false"
     },
     {
       "id": "region-port-au-prince",
       "number": 3,
       "toolbarLabel": "Region around Port-au-Prince (Cul-de-Sac)",
       "sectionName": "Region around Port-au-Prince (Cul-de-Sac)",
-      "sectionDescription": "Story description to confirm after the next supervisor review.",
-      "markerPosition": [
-        18.5370824,
-        -72.1421889
-      ],
-      "markerOffset": [
-        40,
-        30
-      ],
-      "storyMapUrl": "https://storymaps.arcgis.com/stories/82a4a6d0ecb54a0abf4853505e49fa4d?cover=false",
-      "tileLayer": {
-        "title": "Region around Port-au-Prince (Cul-de-Sac)",
-        "url": "https://mapwarper.net/maps/tile/84281/{z}/{x}/{y}.png",
-        "opacity": 0.82,
-        "tms": false,
-        "tileBounds": [
-          [
-            18.3040439,
-            -72.446015
-          ],
-          [
-            18.7701208,
-            -71.8383628
-          ]
+      "sectionDescription": "Regional module for Port-au-Prince and the Cul-de-Sac plain.",
+      "contentsMap": {
+        "image": "assets/4_CuldeSac.jpg",
+        "color": "#7b4fd6",
+        "box": [
+          61,
+          49.5,
+          15.4
         ],
-        "attribution": "Historical map tiles: MapWarper"
-      }
+        "aspectRatio": 1.5106270627,
+        "badgePosition": "corner",
+        "labelPosition": "below"
+      },
+      "storyMapUrl": "https://storymaps.arcgis.com/stories/7a88abf8f46b47d5af0c644891e3ad48?cover=false"
     },
     {
       "id": "town-port-au-prince",
       "number": 4,
       "toolbarLabel": "Town of Port-au-Prince",
       "sectionName": "Town of Port-au-Prince",
-      "sectionDescription": "Story description to confirm after the next supervisor review.",
-      "markerPosition": [
-        18.547419,
-        -72.3446377
-      ],
-      "markerOffset": [
-        -44,
-        32
-      ],
-      "storyMapUrl": "https://storymaps.arcgis.com/stories/71f6ec76d3d5432ca1554fc25d5a6570?cover=false",
-      "tileLayer": {
-        "title": "Town of Port-au-Prince",
-        "url": "https://mapwarper.net/maps/tile/91237/{z}/{x}/{y}.png",
-        "opacity": 0.84,
-        "tms": false,
-        "tileBounds": [
-          [
-            18.5166442,
-            -72.3731749
-          ],
-          [
-            18.5781937,
-            -72.3161004
-          ]
+      "sectionDescription": "Town-scale module for Port-au-Prince, linked from its position inside the Cul-de-Sac region.",
+      "contentsMap": {
+        "image": "assets/5_Port-au-Prince.jpg",
+        "color": "#d765c8",
+        "box": [
+          45.6,
+          39.3,
+          11.5
         ],
-        "attribution": "Historical map tiles: MapWarper"
-      }
+        "aspectRatio": 0.7820823245,
+        "badgePosition": "corner",
+        "labelPosition": "right",
+        "callout": {
+          "target": [
+            63.2,
+            54
+          ],
+          "anchor": [
+            57.1,
+            48.6
+          ]
+        }
+      },
+      "storyMapUrl": "https://storymaps.arcgis.com/stories/48183ea4819c4e3c9579c3f9d74b3cc0?cover=false"
     }
   ]
 }

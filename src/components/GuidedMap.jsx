@@ -1,182 +1,115 @@
-import { useEffect, useRef, useState } from "react";
-import L from "leaflet";
 import { publicAssetUrl } from "../utils/assetUrl";
-import escapeHtml from "../utils/escapeHtml";
 
-function createMarkerIcon(story) {
-  const [offsetX = 0, offsetY = 0] = story.markerOffset || [];
-  const label = `Go to ${story.sectionName}`;
-  const markerSize = 30;
-  const markerAnchor = markerSize / 2;
+function getPositionStyle(point) {
+  const [left, top] = point;
 
-  return L.divIcon({
-    className: "story-number-marker-wrap",
-    html: `
-      <div
-        class="story-number-marker-positioner"
-        style="--marker-offset-x: ${Number(offsetX)}px; --marker-offset-y: ${Number(offsetY)}px;"
-      >
-        <button
-          class="story-number-marker"
-          type="button"
-          aria-label="${escapeHtml(label)}"
-        >
-          ${escapeHtml(story.number)}
-        </button>
-      </div>
-    `,
-    iconSize: [markerSize, markerSize],
-    iconAnchor: [markerAnchor, markerAnchor],
-  });
+  return {
+    left: `${left}%`,
+    top: `${top}%`,
+  };
 }
 
-function GuidedMap({
-  data,
-  isActive,
-  stories,
-  onOverviewSelect,
-  onStorySelect,
-}) {
-  const mapElementRef = useRef(null);
-  const mapRef = useRef(null);
-  const onStorySelectRef = useRef(onStorySelect);
-  const [status, setStatus] = useState(data.loadingMessage);
+function ContentsMap({ overview, stories, onStorySelect }) {
+  const clickableStories = stories.filter((story) => story.contentsMap);
+  const calloutStories = clickableStories.filter(
+    (story) => story.contentsMap.callout,
+  );
 
-  useEffect(() => {
-    onStorySelectRef.current = onStorySelect;
-  }, [onStorySelect]);
+  if (!overview?.image || clickableStories.length === 0) {
+    return null;
+  }
 
-  useEffect(() => {
-    if (!isActive || !mapElementRef.current || mapRef.current) {
-      return;
-    }
+  return (
+    <figure className="contents-map" aria-label={overview.title}>
+      <div className="contents-map__frame">
+        <img
+          className="contents-map__image"
+          src={publicAssetUrl(overview.image)}
+          alt={overview.alt || overview.title}
+        />
 
-    const mapSettings = data.map;
-    const overview = data.overview;
-    const breakpoint = data.draggingBreakpoint || 760;
-    const narrowScreen = window.matchMedia(`(max-width: ${breakpoint}px)`);
+        <svg
+          className="contents-map__callouts"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {calloutStories.map((story) => {
+            const { anchor, target } = story.contentsMap.callout;
 
-    const map = L.map(mapElementRef.current, {
-      center: mapSettings.center,
-      zoom: mapSettings.zoom,
-      minZoom: mapSettings.minZoom,
-      maxZoom: mapSettings.maxZoom,
-      maxBounds: mapSettings.maxBounds,
-      maxBoundsViscosity: 0.8,
-      zoomControl: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      touchZoom: false,
-      boxZoom: false,
-      keyboard: false,
-      dragging: !narrowScreen.matches,
-      inertia: true,
-      attributionControl: true,
-      zoomSnap: 0.25,
-    });
+            return (
+              <line
+                key={story.id}
+                x1={target[0]}
+                y1={target[1]}
+                x2={anchor[0]}
+                y2={anchor[1]}
+                stroke={story.contentsMap.color}
+              />
+            );
+          })}
+        </svg>
 
-    mapRef.current = map;
+        {calloutStories.map((story) => {
+          const { target } = story.contentsMap.callout;
 
-    const showTileError = () => {
-      setStatus(data.tileErrorMessage);
-    };
+          return (
+            <span
+              className="contents-map__target"
+              key={`${story.id}-target`}
+              style={{
+                ...getPositionStyle(target),
+                "--hotspot-color": story.contentsMap.color,
+              }}
+              aria-hidden="true"
+            />
+          );
+        })}
 
-    const basemap = L.tileLayer(mapSettings.basemap.url, {
-      maxZoom: mapSettings.basemap.maxZoom,
-      attribution: mapSettings.basemap.attribution,
-    });
-    basemap.on("tileerror", showTileError).addTo(map);
+        {clickableStories.map((story) => {
+          const location = story.contentsMap;
+          const [left, top, width, fallbackHeight] = location.box;
+          const level = location.callout ? "secondary" : "primary";
+          const sizeStyle = location.aspectRatio
+            ? { aspectRatio: String(location.aspectRatio) }
+            : { height: `${fallbackHeight}%` };
 
-    const overviewPane = map.createPane("overview-image-pane");
-    overviewPane.style.zIndex = "280";
-    overviewPane.style.pointerEvents = "none";
+          return (
+            <button
+              className={`contents-map__hotspot contents-map__hotspot--${level}`}
+              key={story.id}
+              type="button"
+              style={{
+                "--hotspot-color": location.color,
+                left: `${left}%`,
+                top: `${top}%`,
+                width: `${width}%`,
+                ...sizeStyle,
+              }}
+              onClick={() => onStorySelect(story.id)}
+              aria-label={`Open ${story.sectionName}`}
+              title={story.sectionName}
+            >
+              <img src={publicAssetUrl(location.image)} alt="" aria-hidden="true" />
 
-    L.imageOverlay(publicAssetUrl(overview.image), overview.bounds, {
-      alt: overview.title,
-      interactive: false,
-      opacity: overview.opacity,
-      pane: "overview-image-pane",
-    }).addTo(map);
+              <span className="contents-map__number" aria-hidden="true">
+                {story.number}
+              </span>
+              <span
+                className={`contents-map__label contents-map__label--${location.labelPosition || "below"}`}
+                aria-hidden="true"
+              >
+                {story.sectionName}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </figure>
+  );
+}
 
-    stories.forEach((story, index) => {
-      const paneName = `historical-map-pane-${index}`;
-      const pane = map.createPane(paneName);
-      pane.style.zIndex = String(320 + index);
-      pane.style.pointerEvents = "none";
-
-      const layer = story.tileLayer;
-      const tileLayer = L.tileLayer(layer.url, {
-        attribution: layer.attribution,
-        bounds: layer.tileBounds,
-        opacity: layer.opacity,
-        pane: paneName,
-        tms: layer.tms === true,
-      });
-
-      tileLayer.on("tileerror", showTileError).addTo(map);
-    });
-
-    stories.forEach((story) => {
-      const marker = L.marker(story.markerPosition, {
-        icon: createMarkerIcon(story),
-        keyboard: false,
-        title: story.sectionName,
-        zIndexOffset: 1000 + story.number,
-      }).addTo(map);
-
-      marker.bindTooltip(story.toolbarLabel, {
-        direction: "top",
-        offset: [0, -20],
-      });
-
-      marker.on("click", () => onStorySelectRef.current(story.id));
-    });
-
-    const fitOverview = () => {
-      map.setMinZoom(mapSettings.minZoom);
-      map.setMaxZoom(mapSettings.maxZoom);
-      map.fitBounds(overview.bounds, {
-        animate: false,
-        padding: overview.fitPadding,
-      });
-
-      const responsiveZoomBoost = narrowScreen.matches ? 0 : 0.15;
-      const fixedOverviewZoom = Math.min(
-        mapSettings.maxZoom,
-        map.getZoom() + responsiveZoomBoost,
-      );
-
-      map.setZoom(fixedOverviewZoom, { animate: false });
-      map.setMinZoom(fixedOverviewZoom);
-      map.setMaxZoom(fixedOverviewZoom);
-    };
-
-    const syncLayout = (event) => {
-      if (event.matches) {
-        map.dragging.disable();
-      } else {
-        map.dragging.enable();
-      }
-
-      fitOverview();
-    };
-
-    narrowScreen.addEventListener("change", syncLayout);
-
-    const frameId = window.requestAnimationFrame(() => {
-      map.invalidateSize();
-      fitOverview();
-      setStatus("");
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-      narrowScreen.removeEventListener("change", syncLayout);
-      map.remove();
-      mapRef.current = null;
-    };
-  }, [data, isActive, stories]);
-
+function GuidedMap({ data, stories, onStorySelect }) {
   return (
     <section
       className="guided section-pad"
@@ -184,47 +117,16 @@ function GuidedMap({
       aria-label={data.sectionLabel}
       tabIndex="-1"
     >
-      <div className="content-wide">
-        <div className="map-shell">
-          <div
-            className="map-toolbar"
-            role="group"
-            aria-label={data.toolbarLabel}
-          >
-            <button type="button" onClick={onOverviewSelect}>
-              {data.overviewButtonLabel}
-            </button>
-
-            {stories.map((story) => (
-              <button
-                key={story.id}
-                type="button"
-                onClick={() => onStorySelect(story.id)}
-              >
-                {story.number}. {story.toolbarLabel}
-              </button>
-            ))}
-          </div>
-
-          <div
-            className={`map-status${status ? " is-visible" : ""}`}
-            role="status"
-          >
-            {status}
-          </div>
-
-          <div
-            className="leaflet-map"
-            id="guidedLeafletMap"
-            ref={mapElementRef}
-            role="region"
-            aria-label={data.mapAriaLabel}
-          />
+      <div className="guided__content content-wide">
+        <div className="map-intro__copy content-narrow">
+          <p className="lead">{data.introText}</p>
         </div>
-      </div>
 
-      <div className="map-intro content-narrow">
-        <p className="lead">{data.introText}</p>
+        <ContentsMap
+          overview={data.overview}
+          stories={stories}
+          onStorySelect={onStorySelect}
+        />
       </div>
     </section>
   );

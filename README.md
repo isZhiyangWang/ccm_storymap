@@ -1,6 +1,6 @@
 # Critical Counter Map
 
-Vite + React landing page for **Colonial Networks: A Critical Counter Map**. The page combines an opening video, a guided Leaflet overview, and lazy-loaded ArcGIS StoryMaps.
+Vite + React landing page for **Colonial Networks: A Critical Counter Map**. The page combines an opening video, a clickable contents map, and lazy-loaded ArcGIS StoryMaps.
 
 ## Install
 
@@ -32,19 +32,17 @@ npm run preview
 
 ## Update map and story content
 
-Edit `public/data/mapData.json`. Its `_editingNote` lists the fields that should be reviewed after the next supervisor meeting.
+Edit `public/data/mapData.json`. Its `_editingNote` lists the fields intended for routine content updates.
 
 Important story fields:
 
 - `sectionName`: heading above the embedded StoryMap
-- `toolbarLabel`: label shown in the guided-map toolbar
+- `toolbarLabel`: label shown in clickable map and story navigation affordances
 - `sectionDescription`: short text above the StoryMap
-- `markerPosition`: accurate `[latitude, longitude]` anchor
-- `markerOffset`: small `[x, y]` pixel offset that keeps nearby markers tappable
 - `storyMapUrl`: ArcGIS StoryMaps URL
-- `tileLayer`: verified MapWarper tile configuration
+- `contentsMap`: inset position, source-image aspect ratio, badge/label placement, and optional callout line for the clickable contents map
 
-The four MapWarper layers use normal XYZ mode (`tms: false`). Their `tileBounds` values come from MapWarper metadata and only limit unnecessary tile requests; the tile service itself controls geographic placement.
+`1_SaintDomingue.jpg` is used as a static clickable contents image. Each story's `contentsMap.box` and `contentsMap.callout` values are expressed as percentages of that image; `contentsMap.aspectRatio` stores the inset source image ratio so the preview window is not distorted.
 
 ## GitHub Pages
 
@@ -60,4 +58,4 @@ Deploy the generated `dist/` directory with GitHub Actions or another GitHub Pag
 
 ## External services
 
-The base map, historical MapWarper tiles, and ArcGIS StoryMap embeds require an internet connection. The large overview image and opening video are served locally from `public/assets/`.
+ArcGIS StoryMap embeds require an internet connection. The clickable contents image and opening video are served locally from `public/assets/`.
