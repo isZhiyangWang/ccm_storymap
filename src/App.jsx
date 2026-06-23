@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import BackToTopButton from "./components/BackToTopButton";
 import GuidedMap from "./components/GuidedMap";
 import Hero from "./components/Hero";
@@ -49,7 +49,7 @@ function App() {
     }
   }, [reducedMotion]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.body.classList.toggle("is-locked", !introComplete);
     document.body.classList.toggle("is-unlocked", introComplete);
 
@@ -92,7 +92,7 @@ function App() {
 
   if (!pageData) {
     return (
-      <div className="app-message" role="status">
+      <div className="app-message app-message--loading" role="status">
         Loading Critical Counter Map…
       </div>
     );

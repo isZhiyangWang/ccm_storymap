@@ -7,9 +7,65 @@
       name="description"
       content="Landing page for Colonial Networks: A Critical Counter Map."
     />
+    <style>
+      html,
+      body {
+        background: #f7f8f6;
+      }
+
+      .initial-loading-cover {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: grid;
+        place-items: center;
+        background: #f7f8f6;
+        opacity: 1;
+        transition: opacity 420ms ease;
+      }
+
+      .initial-loading-cover.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .initial-loading-cover__spinner {
+        width: 2rem;
+        height: 2rem;
+        border: 2px solid #dce4e1;
+        border-top-color: #2f6f7e;
+        border-radius: 50%;
+        animation: initial-loading-spin 720ms linear infinite;
+      }
+
+      @keyframes initial-loading-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .initial-loading-cover {
+          transition-duration: 120ms;
+        }
+
+        .initial-loading-cover__spinner {
+          animation: none;
+          border-color: #2f6f7e;
+        }
+      }
+    </style>
     <title>Colonial Networks: A Critical Counter Map</title>
   </head>
   <body class="is-locked">
+    <div
+      class="initial-loading-cover"
+      id="initial-loading-cover"
+      role="status"
+      aria-label="Loading Colonial Networks: A Critical Counter Map"
+    >
+      <div class="initial-loading-cover__spinner" aria-hidden="true"></div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
