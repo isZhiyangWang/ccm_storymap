@@ -46,15 +46,15 @@ Important story fields:
 
 ## GitHub Pages
 
-The default Vite base path is `/`, which works for local development and a future custom domain.
+The site is served at `https://criticalcountermap.colonialnetworks.org/`. The default Vite base path and the GitHub Actions build use `/` so scripts, styles, and public assets load from the custom domain's root.
 
-For a GitHub Pages project site, build with the repository name as the base path:
+If switching back to a GitHub Pages project URL without a custom domain, change `VITE_BASE_PATH` in `.github/workflows/pages.yml` to `/ccm_storymap/`. For a local build targeting that project URL, use:
 
 ```bash
 VITE_BASE_PATH=/ccm_storymap/ npm run build
 ```
 
-Deploy the generated `dist/` directory with GitHub Actions or another GitHub Pages workflow. Do not set a custom domain in the code; configure it later in the repository Pages settings.
+Deploy the generated `dist/` directory with GitHub Actions. Manage the custom domain in the repository Pages settings. At the DNS provider, the `criticalcountermap` CNAME record should point to `iszhiyangwang.github.io` (without the repository name or a URL scheme).
 
 ## External services
 
